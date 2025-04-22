@@ -9,7 +9,6 @@ A real-time chat application built with Next.js, Shadcn and Firebase Firestore.
 - Loads only the 25 latest messages initially
 - Scroll-anchored message list (bottom-aligned)
 - Loads older messages on scroll-up
-- Responsive UI using only basic React components (no design libraries)
 
 ## Tech Stack
 
