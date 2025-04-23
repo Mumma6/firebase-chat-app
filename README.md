@@ -2,6 +2,11 @@
 
 A real-time chat application built with Next.js, Shadcn and Firebase Firestore.
 
+## Blog Post
+
+Read more about how this app was built in this blog post:  
+[Building a Real-Time Chat App with Firebase and Next.js](https://dev.to/martinpersson/building-a-real-time-chat-app-with-firebase-and-nextjs-1fea)
+
 ## Features
 
 - Prompt for display name before entering chat
