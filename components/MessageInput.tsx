@@ -4,36 +4,38 @@ import { useState } from "react"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
-
 import { useUser } from "@/context/UserContext"
-import { v4 as uuid } from "uuid"
-import { sendMessage } from "@/services/ChatService"
-import { Timestamp } from "firebase/firestore"
 
 const MessageInput = () => {
   const { user, isLoggedIn } = useUser()
   const [text, setText] = useState("")
+  const [sending, setSending] = useState(false)
 
   const handleSend = async () => {
-    if (!isLoggedIn) {
-      toast.error("You need to be logged in to send messages.")
+    if (!isLoggedIn || !text.trim() || sending) {
+      if (!isLoggedIn) toast.error("You need to be logged in to send messages.")
       return
     }
 
-    const message = {
-      id: uuid(),
-      text,
-      sender: user,
-      timestamp: Timestamp.now(),
-    }
+    const payload = { text: text.trim(), sender: user }
+    setText("")
+    setSending(true)
 
     try {
-      await sendMessage(message)
+      const res = await fetch("/api/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
+      if (!res.ok) {
+        const data = (await res.json().catch(() => null)) as { error?: string } | null
+        throw new Error(data?.error ?? "Failed to send message")
+      }
     } catch (err) {
       const error = err as Error
       toast.error(`Something went wrong: ${error.message}`)
     } finally {
-      setText("")
+      setSending(false)
     }
   }
 
@@ -47,6 +49,7 @@ const MessageInput = () => {
         onChange={(e) => setText(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey && text) {
+            e.preventDefault()
             handleSend()
           }
         }}
@@ -54,7 +57,7 @@ const MessageInput = () => {
       />
       <Button
         onClick={handleSend}
-        disabled={!text}
+        disabled={!text || sending}
       >
         Send
       </Button>

@@ -10,15 +10,18 @@ Read more about how this app was built in this blog post:
 ## Features
 
 - Prompt for display name before entering chat
-- Real-time updates using Firestore `onSnapshot`
+- Message load/send via Next.js Route Handlers (server-side Firebase)
+- Polls for new messages every 2s
 - Loads only the 25 latest messages initially
 - Scroll-anchored message list (bottom-aligned)
 - Loads older messages on scroll-up
+- Flowmark observability on `chat.load-messages`
 
 ## Tech Stack
 
 - **Next.js** with **TypeScript**
-- **Firebase Firestore** for real-time database
+- **Firebase Firestore** (server-side) for the database
+- **Flowmark** for workflow observability
 - **Tailwind CSS** and **shadcn/ui** for styling
 - **Zod** for runtime schema validation
 
@@ -30,7 +33,7 @@ Read more about how this app was built in this blog post:
 2. Install dependencies  
    `npm install`
 
-3. Create a `.env.local` file in the root directory and add your Firebase config:
+3. Create a `.env.local` file in the root directory (see `.env.example`):
 
 ```env
 NEXT_PUBLIC_FIREBASE_API_KEY=...
@@ -40,7 +43,13 @@ NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=...
 NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=...
 NEXT_PUBLIC_FIREBASE_APP_ID=...
 NEXT_PUBLIC_FIREBASE_COLLECTION=your-unique-collection-name
+
+# Flowmark — server only. Never NEXT_PUBLIC_.
+FLOWMARK_API_KEY=
+FLOWMARK_API_URL=https://api.flowmark.dev
 ```
 
-4. Start development server
+Put your Flowmark write key in `.env.local` yourself. Do not commit it.
+
+4. Start development server  
    `npm run dev`

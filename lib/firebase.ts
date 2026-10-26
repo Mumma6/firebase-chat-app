@@ -1,4 +1,5 @@
-import { initializeApp } from "firebase/app"
+import "server-only"
+import { initializeApp, getApps } from "firebase/app"
 import { getFirestore } from "firebase/firestore"
 
 const firebaseConfig = {
@@ -10,5 +11,5 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID!,
 }
 
-const app = initializeApp(firebaseConfig)
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0]!
 export const db = getFirestore(app)
